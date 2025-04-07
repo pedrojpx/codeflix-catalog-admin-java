@@ -1,0 +1,5 @@
+rootProject.name = 'codeflix-catalog-admin-java'
+include 'domain'
+include 'application'
+include 'infrastructure'
+
