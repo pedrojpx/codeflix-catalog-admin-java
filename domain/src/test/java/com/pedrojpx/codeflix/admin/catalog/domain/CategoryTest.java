@@ -31,7 +31,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void givenInvalidParams_whenCallNewCategory_thenReportError() { //given... when... then... test naming convention
+    public void givenNullName_whenCallNewCategory_thenReportError() { //given... when... then... test naming convention
         final String expectedName = null;
         final var expectedDescription = "A category mais assistida";
         final var expectedIsActive = true;
@@ -47,6 +47,105 @@ public class CategoryTest {
         Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
 
     }
+
+    @Test
+    public void givenEmptyName_whenCallNewCategory_thenReportError() { //given... when... then... test naming convention
+        final String expectedName = "";
+        final var expectedDescription = "A category mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should not be empty";
+        final var expectedErrorCount = 1;
+
+        final var actualCategory =
+                Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
+
+    }
+
+    @Test
+    public void givenTooShortNameLength_whenCallNewCategory_thenReportError() { //given... when... then... test naming convention
+        final String expectedName = "Fi "; //min 3 characters, space should not be counted
+        final var expectedDescription = "A category mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should be between 3 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var actualCategory =
+                Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
+
+    }
+
+    @Test
+    public void givenTooLongNameLength_whenCallNewCategory_thenReportError() { //given... when... then... test naming convention
+        final String expectedName = """
+            Lorem ipsum dictumst fusce congue aptent purus curae, placerat diam phasellus porta ullamcorper ultrices vehicula vel, cras est lectus integer non placerat. donec curabitur ultrices etiam donec metus proin potenti conubia felis condimentum, ad faucibus ele
+            """; //max 255 characters, space should not be counted
+        final var expectedDescription = "A category mais assistida";
+        final var expectedIsActive = true;
+        final var expectedErrorMessage = "'name' should be between 3 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var actualCategory =
+                Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
+
+    }
+
+    @Test
+    public void givenEmptyDescription_whenCallNewCategory_thenOK() { //given... when... then... test naming convention
+        final String expectedName = "name"; //max 255 characters, space should not be counted
+        final var expectedDescription = "";
+        final var expectedIsActive = true;
+
+        final var actualCategory =
+                Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        assertNotNull(actualCategory);
+        assertNotNull(actualCategory.getId());
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        assertNotNull(actualCategory.getCreatedAt());
+        assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void givenIsActiveFalse_whenCallNewCategory_thenOK() { //given... when... then... test naming convention
+        final String expectedName = "name"; //max 255 characters, space should not be counted
+        final var expectedDescription = "";
+        final var expectedIsActive = false;
+
+        final var actualCategory =
+                Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+
+        assertNotNull(actualCategory);
+        assertNotNull(actualCategory.getId());
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        assertNotNull(actualCategory.getCreatedAt());
+        assertNotNull(actualCategory.getUpdatedAt());
+        assertNotNull(actualCategory.getDeletedAt());
+    }
+
 
 
 }
