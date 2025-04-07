@@ -1,14 +1,18 @@
 package com.pedrojpx.codeflix.admin.catalog.domain;
 
+import com.pedrojpx.codeflix.admin.catalog.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 public abstract class Entity<ID extends Identifier> {
     protected final ID id;
 
-    protected Entity(ID id) {
+    protected Entity(final ID id) {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+
+    public abstract void validate(ValidationHandler handler);
 
     public ID getId() {
         return id;

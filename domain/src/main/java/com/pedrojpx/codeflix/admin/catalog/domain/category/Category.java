@@ -1,6 +1,7 @@
 package com.pedrojpx.codeflix.admin.catalog.domain.category;
 
 import com.pedrojpx.codeflix.admin.catalog.domain.AggregateRoot;
+import com.pedrojpx.codeflix.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -11,7 +12,7 @@ public class Category extends AggregateRoot<CategoryID> {
     private String name;
     private String description;
     private boolean active;
-    //o instant se baseia no tempo a partir do nomento da intanciação da variável ao invés to epoch. Para este caso é mais preciso
+    //o instant se baseia no tempo a partir do momento da instanciação da variável ao invés to epoch. Para este caso é mais preciso
     private Instant createdAt;
     private Instant updatedAt;
     private Instant deletedAt;
@@ -32,6 +33,11 @@ public class Category extends AggregateRoot<CategoryID> {
         final var id = CategoryID.unique();
         final var now = Instant.now();
         return new Category(id, name, description, isActive, now, now, null);
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new CategoryValidator(this, handler).validate();
     }
 
     public CategoryID getId() {
