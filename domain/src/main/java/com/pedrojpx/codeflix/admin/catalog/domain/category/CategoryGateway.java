@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface CategoryGateway {
 
-    Category create(Category category);
+    Category save(Category category);
 
     void deleteById(CategoryID id);
 

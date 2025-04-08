@@ -1,8 +1,6 @@
 package com.pedrojpx.codeflix.admin.catalog.application.category.create;
 
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
-import com.pedrojpx.codeflix.admin.catalog.domain.exceptions.DomainException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,15 +41,15 @@ public class CreateCategoryUseCaseTest {
 
         //gateway is made to return the argument sent so that we can check if the arguments passed were correct
         //(remember we are testing the `UseCase` here! Not the gateway!
-        Mockito.when(gateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
+        Mockito.when(gateway.save(Mockito.any())).thenAnswer(returnsFirstArg());
 
-        final var output = useCase.execute(input);
+        final var output = useCase.execute(input).get();
 
         assertNotNull(output);
         assertNotNull(output.id());
 
         //checks that `create` was called once AND with the following data
-        Mockito.verify(gateway, Mockito.times(1)).create(argThat(category ->
+        Mockito.verify(gateway, Mockito.times(1)).save(argThat(category ->
                      Objects.equals(expectedName, category.getName())
                         && Objects.equals(expectedDescription, category.getDescription())
                         && Objects.equals(expectedIsActive, category.isActive())
@@ -72,11 +70,11 @@ public class CreateCategoryUseCaseTest {
 
         final var input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
-        final var exception = assertThrows(DomainException.class, () -> useCase.execute(input));
+        final var notifications = useCase.execute(input).getLeft();
 
-        assertEquals(expectedErrorCount, exception.getErrors().size());
-        assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
-        Mockito.verify(gateway, Mockito.times(0)).create(any());
+        assertEquals(expectedErrorCount, notifications.getErrors().size());
+        assertEquals(expectedErrorMessage, notifications.firstError().message());
+        Mockito.verify(gateway, Mockito.times(0)).save(any());
     }
 
     @Test
@@ -90,15 +88,15 @@ public class CreateCategoryUseCaseTest {
 
         //gateway is made to return the argument sent so that we can check if the arguments passed were correct
         //(remember we are testing the `UseCase` here! Not the gateway!
-        Mockito.when(gateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
+        Mockito.when(gateway.save(Mockito.any())).thenAnswer(returnsFirstArg());
 
-        final var output = useCase.execute(input);
+        final var output = useCase.execute(input).get();
 
         assertNotNull(output);
         assertNotNull(output.id());
 
         //checks that `create` was called once AND with the following data
-        Mockito.verify(gateway, Mockito.times(1)).create(argThat(category ->
+        Mockito.verify(gateway, Mockito.times(1)).save(argThat(category ->
                      Objects.equals(expectedName, category.getName())
                         && Objects.equals(expectedDescription, category.getDescription())
                         && Objects.equals(expectedIsActive, category.isActive())
@@ -116,19 +114,21 @@ public class CreateCategoryUseCaseTest {
         final var expectedDescription = "Categoria de Filmes";
         final var expectedIsActive = true;
         final var expectedErrorMessage = "Gateway error";
+        final var expectedErrorCount = 1;
 
         final var input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         //gateway is made to return the argument sent so that we can check if the arguments passed were correct
         //(remember we are testing the `UseCase` here! Not the gateway!
-        Mockito.when(gateway.create(Mockito.any())).thenThrow(new IllegalStateException("Gateway error"));
+        Mockito.when(gateway.save(Mockito.any())).thenThrow(new IllegalStateException("Gateway error"));
 
-        final var exception = assertThrows(IllegalStateException.class, () -> useCase.execute(input));
+        final var notification = useCase.execute(input).getLeft();
 
-        assertEquals(expectedErrorMessage, exception.getMessage());
+        assertEquals(expectedErrorCount, notification.getErrors().size());
+        assertEquals(expectedErrorMessage, notification.firstError().message());
 
         //checks that `create` was called once AND with the following data
-        Mockito.verify(gateway, Mockito.times(1)).create(argThat(category ->
+        Mockito.verify(gateway, Mockito.times(1)).save(argThat(category ->
                      Objects.equals(expectedName, category.getName())
                         && Objects.equals(expectedDescription, category.getDescription())
                         && Objects.equals(expectedIsActive, category.isActive())

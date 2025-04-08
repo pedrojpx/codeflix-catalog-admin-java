@@ -2,7 +2,9 @@ package com.pedrojpx.codeflix.admin.catalog.application.category.create;
 
 import com.pedrojpx.codeflix.admin.catalog.domain.category.Category;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
-import com.pedrojpx.codeflix.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import com.pedrojpx.codeflix.admin.catalog.domain.validation.handler.Notification;
+import io.vavr.API;
+import io.vavr.control.Either;
 
 import java.util.Objects;
 
@@ -15,12 +17,19 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     }
 
     @Override
-    public CreateCategoryOutput execute(final CreateCategoryInput input) {
+    public Either<Notification, CreateCategoryOutput> execute(final CreateCategoryInput input) {
         final var cat = Category.newCategory(input.name(), input.description(), input.isActive());
-        cat.validate(new ThrowsValidationHandler());
+        final var notification = Notification.create();
+        cat.validate(notification);
 
-        this.gateway.create(cat);
+        //this "hasError" catches category entity creation errors
+        return notification.hasError() ? API.Left(notification) : save(cat);
+    }
 
-        return CreateCategoryOutput.from(cat);
+    private Either<Notification, CreateCategoryOutput> save(final Category cat) {
+        //this try catches category gateway saving errors
+        return API.Try(() -> this.gateway.save(cat))
+                .toEither()
+                .bimap(Notification::create, CreateCategoryOutput::from);
     }
 }
