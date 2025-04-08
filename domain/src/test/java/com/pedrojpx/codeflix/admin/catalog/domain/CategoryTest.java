@@ -196,6 +196,93 @@ public class CategoryTest {
         Assertions.assertEquals(activated.getCreatedAt(), createdAt);
     }
 
+    @Test
+    public void givenValidCategory_whenCalledUpdate_thenReturnUpdated() {
+        final String expectedName = "name"; //max 255 characters, space should not be counted
+        final var expectedDescription = "description";
+        final var expectedIsActive = true;
+
+        final var category =
+                Category.newCategory("old name", "old description", expectedIsActive);
+
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+
+        final var updatedAt = category.getUpdatedAt();
+        final var createdAt = category.getCreatedAt();
+        final var idAtCreation = category.getId();
+
+        final var updated = category.update(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertEquals(idAtCreation, updated.getId());
+        Assertions.assertEquals(expectedName, updated.getName());
+        Assertions.assertEquals(expectedDescription, updated.getDescription());
+        Assertions.assertTrue(updated.isActive());
+        Assertions.assertNotNull(updated.getCreatedAt());
+        Assertions.assertTrue(updated.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNull(updated.getDeletedAt());
+        Assertions.assertEquals(updated.getCreatedAt(), createdAt);
+    }
+
+    @Test
+    public void givenValidCategory_whenCalledUpdateToInactive_thenReturnUpdated() {
+        final String expectedName = "name"; //max 255 characters, space should not be counted
+        final var expectedDescription = "description";
+        final var expectedIsActive = false;
+
+        final var category =
+                Category.newCategory("old name", "old description", true);
+
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertTrue(category.isActive());
+        Assertions.assertNull(category.getDeletedAt());
+
+        final var updatedAt = category.getUpdatedAt();
+        final var createdAt = category.getCreatedAt();
+        final var idAtCreation = category.getId();
+
+        final var updated = category.update(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertEquals(idAtCreation, updated.getId());
+        Assertions.assertEquals(expectedName, updated.getName());
+        Assertions.assertEquals(expectedDescription, updated.getDescription());
+        Assertions.assertFalse(updated.isActive());
+        Assertions.assertNotNull(updated.getCreatedAt());
+        Assertions.assertTrue(updated.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertEquals(updated.getCreatedAt(), createdAt);
+        Assertions.assertFalse(updated.isActive());
+        Assertions.assertNotNull(updated.getDeletedAt());
+    }
+
+    @Test
+    public void givenValidCategory_whenCalledUpdateToInvalid_thenReturnUpdated() {
+        final String expectedName = null; //max 255 characters, space should not be counted
+        final var expectedDescription = "description";
+        final var expectedIsActive = true;
+
+        final var category =
+                Category.newCategory("old name", "old description", true);
+
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertTrue(category.isActive());
+        Assertions.assertNull(category.getDeletedAt());
+
+        final var updatedAt = category.getUpdatedAt();
+        final var createdAt = category.getCreatedAt();
+        final var idAtCreation = category.getId();
+
+        final var updated = category.update(expectedName, expectedDescription, expectedIsActive);
+
+        Assertions.assertEquals(idAtCreation, updated.getId());
+        Assertions.assertEquals(expectedName, updated.getName());
+        Assertions.assertEquals(expectedDescription, updated.getDescription());
+        Assertions.assertTrue(updated.isActive());
+        Assertions.assertNotNull(updated.getCreatedAt());
+        Assertions.assertTrue(updated.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNull(updated.getDeletedAt());
+        Assertions.assertEquals(updated.getCreatedAt(), createdAt);
+        Assertions.assertTrue(updated.isActive());
+        Assertions.assertNull(updated.getDeletedAt());
+    }
 
 
 
