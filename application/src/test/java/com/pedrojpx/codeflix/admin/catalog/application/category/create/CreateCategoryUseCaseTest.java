@@ -1,6 +1,7 @@
 package com.pedrojpx.codeflix.admin.catalog.application.category.create;
 
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,11 @@ public class CreateCategoryUseCaseTest {
 
     @Mock
     private CategoryGateway gateway;
+
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset();
+    }
 
     //1. teste do caminho feliz
     //2. teste com propriedade invalida (name)

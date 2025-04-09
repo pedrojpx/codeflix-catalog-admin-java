@@ -5,10 +5,12 @@ import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryID;
 import com.pedrojpx.codeflix.admin.catalog.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
@@ -26,6 +28,11 @@ public class UpdateCategoryUseCaseTest {
 
     @Mock
     private CategoryGateway gateway;
+
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset();
+    }
 
     // 1. teste caminho feliz
     // 2. teste passando propriedade inválida
