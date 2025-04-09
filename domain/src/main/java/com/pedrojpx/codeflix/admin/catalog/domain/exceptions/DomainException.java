@@ -20,6 +20,7 @@ public class DomainException extends NoStackTraceException {
     }
 
 
+
     public List<Error> getErrors() {
         return errors;
     }
