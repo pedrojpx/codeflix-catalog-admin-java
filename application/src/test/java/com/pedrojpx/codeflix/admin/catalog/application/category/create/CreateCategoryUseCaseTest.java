@@ -28,7 +28,7 @@ public class CreateCategoryUseCaseTest {
 
     @BeforeEach
     void cleanUp() {
-        Mockito.reset();
+        Mockito.reset(gateway);
     }
 
     //1. teste do caminho feliz

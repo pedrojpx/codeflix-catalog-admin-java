@@ -31,7 +31,7 @@ public class UpdateCategoryUseCaseTest {
 
     @BeforeEach
     void cleanUp() {
-        Mockito.reset();
+        Mockito.reset(gateway);
     }
 
     // 1. teste caminho feliz
