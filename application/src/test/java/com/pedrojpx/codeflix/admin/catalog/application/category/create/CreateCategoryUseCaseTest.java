@@ -93,7 +93,7 @@ public class CreateCategoryUseCaseTest {
         final var input = CreateCategoryInput.with(expectedName, expectedDescription, expectedIsActive);
 
         //gateway is made to return the argument sent so that we can check if the arguments passed were correct
-        //(remember we are testing the `UseCase` here! Not the gateway!
+        //remember we are testing the `UseCase` here! Not the gateway!
         Mockito.when(gateway.save(Mockito.any())).thenAnswer(returnsFirstArg());
 
         final var output = useCase.execute(input).get();
