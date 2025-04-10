@@ -1,6 +1,7 @@
 package com.pedrojpx.codeflix.admin.catalog.domain.pagination;
 
 import java.util.List;
+import java.util.function.Function;
 
 public record Pagination<T>(
         int currentPage,
@@ -9,4 +10,8 @@ public record Pagination<T>(
         List<T> items
 ) {
 
+    public <R> Pagination<R> map(final Function<T, R> mapper) {
+        final List<R> newList = this.items().stream().map(mapper).toList();
+        return new Pagination<>(currentPage(), perPage(), total(), newList);
+    }
 }
