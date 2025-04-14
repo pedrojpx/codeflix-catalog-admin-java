@@ -1,5 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.6.7'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+bootJar {
+    archiveFileName = "application.jar"
+    destinationDirectory = rootProject.layout.buildDirectory.dir("libs")
 }
 
 group = 'com.pedrojpx.codeflix.admin.catalog.infrastructure'
@@ -12,9 +20,15 @@ repositories {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
+    implementation('mysql:mysql-connector-java')
 
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
