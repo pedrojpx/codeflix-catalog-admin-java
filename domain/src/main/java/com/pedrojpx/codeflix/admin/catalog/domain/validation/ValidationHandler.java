@@ -8,7 +8,7 @@ public interface ValidationHandler {
 
     ValidationHandler append(ValidationHandler aHandler);
 
-    ValidationHandler validate(Validation aValidation);
+    ValidationHandler handle(Validation aValidation);
 
     public List<Error> getErrors();
 

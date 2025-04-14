@@ -7,25 +7,25 @@ import com.pedrojpx.codeflix.admin.catalog.domain.validation.ValidationHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Notification implements ValidationHandler {
+public class GatherNotificationsValidationHandler implements ValidationHandler {
 
     private final List<Error> errors;
 
-    private Notification(final List<Error> errors) {
+    private GatherNotificationsValidationHandler(final List<Error> errors) {
         this.errors = errors;
     }
 
-    public static Notification create() {
-        return new Notification(new ArrayList<>());
+    public static GatherNotificationsValidationHandler create() {
+        return new GatherNotificationsValidationHandler(new ArrayList<>());
     }
 
-    public static Notification create(final Error e) {
-        final var notification = new Notification(new ArrayList<>());
+    public static GatherNotificationsValidationHandler create(final Error e) {
+        final var notification = new GatherNotificationsValidationHandler(new ArrayList<>());
         notification.append(e);
         return notification;
     }
 
-    public static Notification create(final Throwable t) {
+    public static GatherNotificationsValidationHandler create(final Throwable t) {
         return create(new Error(t.getMessage()));
     }
 
@@ -43,7 +43,7 @@ public class Notification implements ValidationHandler {
     }
 
     @Override
-    public ValidationHandler validate(Validation aValidation) {
+    public ValidationHandler handle(Validation aValidation) {
         try {
             aValidation.validate();
         } catch (final DomainException ex) {

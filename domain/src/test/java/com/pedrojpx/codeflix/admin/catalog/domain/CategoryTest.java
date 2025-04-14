@@ -2,7 +2,7 @@ package com.pedrojpx.codeflix.admin.catalog.domain;
 
 import com.pedrojpx.codeflix.admin.catalog.domain.category.Category;
 import com.pedrojpx.codeflix.admin.catalog.domain.exceptions.DomainException;
-import com.pedrojpx.codeflix.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import com.pedrojpx.codeflix.admin.catalog.domain.validation.handler.ThrowsExceptionValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +41,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
@@ -59,7 +59,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
@@ -77,7 +77,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
@@ -97,7 +97,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsValidationHandler()));
+        final var exception = Assertions.assertThrows(DomainException.class, () -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         Assertions.assertEquals(expectedErrorCount, exception.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, exception.getErrors().get(0).message());
@@ -113,7 +113,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         assertNotNull(actualCategory);
         assertNotNull(actualCategory.getId());
@@ -134,7 +134,7 @@ public class CategoryTest {
         final var actualCategory =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> actualCategory.validate(new ThrowsExceptionValidationHandler()));
 
         assertNotNull(actualCategory);
         assertNotNull(actualCategory.getId());
@@ -155,7 +155,7 @@ public class CategoryTest {
         final var category =
                 Category.newCategory(expectedName, expectedDescription, expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsExceptionValidationHandler()));
 
         final var updatedAt = category.getUpdatedAt();
         final var createdAt = category.getCreatedAt();
@@ -179,7 +179,7 @@ public class CategoryTest {
         final var category =
                 Category.newCategory(expectedName, expectedDescription, false);
 
-        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsExceptionValidationHandler()));
 
         final var updatedAt = category.getUpdatedAt();
         final var createdAt = category.getCreatedAt();
@@ -205,7 +205,7 @@ public class CategoryTest {
         final var category =
                 Category.newCategory("old name", "old description", expectedIsActive);
 
-        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsExceptionValidationHandler()));
 
         final var updatedAt = category.getUpdatedAt();
         final var createdAt = category.getCreatedAt();
@@ -232,7 +232,7 @@ public class CategoryTest {
         final var category =
                 Category.newCategory("old name", "old description", true);
 
-        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsExceptionValidationHandler()));
         Assertions.assertTrue(category.isActive());
         Assertions.assertNull(category.getDeletedAt());
 
@@ -262,7 +262,7 @@ public class CategoryTest {
         final var category =
                 Category.newCategory("old name", "old description", true);
 
-        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsValidationHandler()));
+        Assertions.assertDoesNotThrow(() -> category.validate(new ThrowsExceptionValidationHandler()));
         Assertions.assertTrue(category.isActive());
         Assertions.assertNull(category.getDeletedAt());
 

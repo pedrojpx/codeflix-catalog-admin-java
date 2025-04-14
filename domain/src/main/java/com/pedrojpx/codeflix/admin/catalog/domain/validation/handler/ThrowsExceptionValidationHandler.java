@@ -6,7 +6,7 @@ import com.pedrojpx.codeflix.admin.catalog.domain.validation.ValidationHandler;
 
 import java.util.List;
 
-public class ThrowsValidationHandler implements ValidationHandler {
+public class ThrowsExceptionValidationHandler implements ValidationHandler {
 
     @Override
     public ValidationHandler append(final Error anError) {
@@ -19,7 +19,7 @@ public class ThrowsValidationHandler implements ValidationHandler {
     }
 
     @Override
-    public ValidationHandler validate(Validation aValidation) {
+    public ValidationHandler handle(Validation aValidation) {
         try {
             aValidation.validate();
         } catch(final Exception ex) {
