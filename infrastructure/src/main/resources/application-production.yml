@@ -3,3 +3,9 @@ mysql:
   password: ${DATABASE_MYSQL_PASSWORD:123456}
   schema: adm_videos
   url: ${DATABASE_MYSQL_URL:localhost:3306}
+
+spring:
+  jpa:
+    show-sql: false # mostra as queries que estão rolando. bo para troubleshooting mas em produção não costuma ser usado
+    hibernate:
+      ddl-auto: none
