@@ -3,11 +3,14 @@ package com.pedrojpx.codeflix.admin.catalog.infrastructure.category;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.Category;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryID;
+import com.pedrojpx.codeflix.admin.catalog.domain.category.CategorySearchQuery;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -175,5 +178,103 @@ public class CategoryMySqlGatewayTest {
         final var found = gateway.findById(CategoryID.from("non existent id"));
 
         assertTrue(found.isEmpty());
+    }
+
+    @Test
+    public void givenExistingCategories_whenCallsFindAll_shouldReturnPaginated() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 2;
+        final var expectedTotal = 3;
+        final var expectedItemsCount = expectedPerPage;
+
+        final var cat1 = Category.newCategory("filmes", null, true);
+        final var cat2 = Category.newCategory("filmes2", null, true);
+        final var cat3 = Category.newCategory("filmes3", null, true);
+
+        assertEquals(0, repo.count());
+        repo.saveAll(List.of(CategoryJpaEntity.from(cat1), CategoryJpaEntity.from(cat2), CategoryJpaEntity.from(cat3)));
+        assertEquals(3, repo.count());
+
+        final var query = new CategorySearchQuery(0, 2, "", "name", "asc");
+        final var result = gateway.findAll(query);
+
+        assertEquals(expectedPage, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(expectedTotal, result.total());
+        assertEquals(expectedItemsCount, result.items().size()); // == expectecPerPage
+        assertEquals(cat1.getId(), result.items().get(0).getId());
+        assertEquals(cat2.getId(), result.items().get(1).getId());
+
+    }
+
+    @Test
+    public void givenNoCategories_whenCallsFindAll_shouldReturnEmptyPage() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 2;
+        final var expectedTotal = 0;
+        final var expectedItemsCount = 0;
+
+        assertEquals(0, repo.count());
+
+        final var query = new CategorySearchQuery(0, 2, "", "name", "asc");
+        final var result = gateway.findAll(query);
+
+        assertEquals(expectedPage, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(expectedTotal, result.total());
+        assertEquals(expectedItemsCount, result.items().size()); // == expectecPerPage
+    }
+
+    @Test
+    public void givenExistingCategories_whenCallsFindAllWithDifferentQueries_shouldReturnPaginated() {
+        final var expectedPerPage = 2;
+        final var expectedTotal = 3;
+        final var expectedItemsCount = expectedPerPage;
+
+        final var cat1 = Category.newCategory("filmes", "az", true);
+        final var cat2 = Category.newCategory("filmes2", "bz", true);
+        final var cat3 = Category.newCategory("zdocumentarios", "cz", true);
+
+        assertEquals(0, repo.count());
+        repo.saveAll(List.of(CategoryJpaEntity.from(cat1), CategoryJpaEntity.from(cat2), CategoryJpaEntity.from(cat3)));
+        assertEquals(3, repo.count());
+
+        var query = new CategorySearchQuery(0, 2, "", "name", "asc");
+        var result = gateway.findAll(query);
+
+        assertEquals(0, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(expectedTotal, result.total());
+        assertEquals(expectedItemsCount, result.items().size()); // == expectecPerPage
+        assertEquals(cat1.getId(), result.items().get(0).getId());
+        assertEquals(cat2.getId(), result.items().get(1).getId());
+
+        query = new CategorySearchQuery(1, 2, "", "name", "asc");
+        result = gateway.findAll(query);
+
+        assertEquals(1, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(expectedTotal, result.total());
+        assertEquals(1, result.items().size()); // == expectecPerPage
+        assertEquals(cat3.getId(), result.items().get(0).getId());
+
+        query = new CategorySearchQuery(0, 2, "doc", "name", "asc");
+        result = gateway.findAll(query);
+
+        assertEquals(0, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(1, result.total());
+        assertEquals(1, result.items().size()); // == expectecPerPage
+        assertEquals(cat3.getId(), result.items().get(0).getId());
+
+        query = new CategorySearchQuery(0, 2, "az", "name", "asc");
+        result = gateway.findAll(query);
+
+        assertEquals(0, result.currentPage());
+        assertEquals(expectedPerPage, result.perPage());
+        assertEquals(1, result.total());
+        assertEquals(1, result.items().size()); // == expectecPerPage
+        assertEquals(cat1.getId(), result.items().get(0).getId());
+
     }
 }

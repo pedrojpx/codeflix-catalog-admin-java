@@ -7,8 +7,16 @@ import com.pedrojpx.codeflix.admin.catalog.domain.category.CategorySearchQuery;
 import com.pedrojpx.codeflix.admin.catalog.domain.pagination.Pagination;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryRepository;
+import com.pedrojpx.codeflix.admin.catalog.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Optional;
 
 @Service
@@ -46,6 +54,28 @@ public class CategoryMySqlGateway implements CategoryGateway {
 
     @Override
     public Pagination<Category> findAll(CategorySearchQuery query) {
-        return null;
+        //Specification utiliza a Criterion API do JPA
+        //Pageable e PageRequest do Spring Data
+
+        //Paginação
+        final var page = PageRequest.of(query.page(), query.perPage(), Sort.by(Sort.Direction.fromString(query.direction()), query.sort()));
+
+        //Busca dinâmica
+        final var specs = Optional.ofNullable(query.terms())
+                .filter(str -> !str.isBlank())
+                .map(str ->
+                        SpecificationUtils.<CategoryJpaEntity>like("name", str)
+                                .or(SpecificationUtils.<CategoryJpaEntity>like("description", str))
+                )
+                .orElse(null);
+
+        final var result = this.repo.findAll(specs, page);
+
+        return new Pagination<>(
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.map(CategoryJpaEntity::toAggregate).toList()
+        );
     }
 }
