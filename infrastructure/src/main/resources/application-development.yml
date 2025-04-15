@@ -5,7 +5,7 @@ mysql:
   url: localhost:3306
 
 server:
-  port: 8080
+  port: 3000
   undertow:
     threads:
       worker: 10 # Generally this should be reasonably high, at least 10 per CPU core: https://undertow.io/undertow-docs/undertow-docs-2.1.0/index.html#listeners-2
