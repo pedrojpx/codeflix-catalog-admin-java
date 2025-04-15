@@ -4,6 +4,7 @@ import com.pedrojpx.codeflix.admin.catalog.domain.AggregateRoot;
 import com.pedrojpx.codeflix.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -24,8 +25,8 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         this.name = name;
         this.description = description;
         this.active = active;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdAt = Objects.requireNonNull(createdAt, "'createdAt' should not be null");
+        this.updatedAt = Objects.requireNonNull(updatedAt, "'updatedAt' should not be null");
         this.deletedAt = deletedAt;
     }
 
