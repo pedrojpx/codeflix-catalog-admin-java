@@ -28,17 +28,20 @@ public class CategoryMySqlGateway implements CategoryGateway {
 
     @Override
     public void deleteById(CategoryID id) {
-
+        final var idValue = id.getValue();
+        if (this.repo.existsById(idValue)) {
+            this.repo.deleteById(idValue);
+        }
     }
 
     @Override
     public Optional<Category> findById(CategoryID id) {
-        return Optional.empty();
+        return this.repo.findById(id.getValue()).map(CategoryJpaEntity::toAggregate); //is used bc of Optional: it only does the mapped function if the value actually exists
     }
 
     @Override
     public Category update(Category category) {
-        return null;
+        return this.repo.save(CategoryJpaEntity.from(category)).toAggregate();
     }
 
     @Override
