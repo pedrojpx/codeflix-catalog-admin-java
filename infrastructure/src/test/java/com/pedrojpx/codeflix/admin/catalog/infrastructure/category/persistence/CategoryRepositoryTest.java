@@ -1,7 +1,8 @@
 package com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence;
 
+import com.pedrojpx.codeflix.admin.catalog.MySqlGatewayTest;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.Category;
-import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.MySqlGatewayTest;
+import com.pedrojpx.codeflix.admin.catalog.infrastructure.MainTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

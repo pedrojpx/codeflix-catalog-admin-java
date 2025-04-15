@@ -1,12 +1,12 @@
-package com.pedrojpx.codeflix.admin.catalog.infrastructure.category;
+package com.pedrojpx.codeflix.admin.catalog.infrastructure;
 
+import com.pedrojpx.codeflix.admin.catalog.MySqlGatewayTest;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.Category;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryGateway;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategoryID;
 import com.pedrojpx.codeflix.admin.catalog.domain.category.CategorySearchQuery;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.pedrojpx.codeflix.admin.catalog.infrastructure.category.persistence.CategoryRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

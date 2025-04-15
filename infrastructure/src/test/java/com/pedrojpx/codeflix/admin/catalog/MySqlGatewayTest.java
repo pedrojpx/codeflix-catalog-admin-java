@@ -1,4 +1,4 @@
-package com.pedrojpx.codeflix.admin.catalog.infrastructure.category;
+package com.pedrojpx.codeflix.admin.catalog;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,19 +22,7 @@ import java.util.Collection;
 })
 @DataJpaTest
 // não usamos o @SpringBootTest este sobe o contexto do Springboot inteiro (útil para testes e2e), mas aqui só precisamos da parte de dados
-@ExtendWith(MySqlGatewayTest.CleanUpExtension.class)
+@ExtendWith(CleanUpExtension.class)
 public @interface MySqlGatewayTest {
 
-    class CleanUpExtension implements BeforeEachCallback {
-
-        @Override
-        public void beforeEach(final ExtensionContext extensionContext) throws Exception {
-            final var repos = SpringExtension.getApplicationContext(extensionContext).getBeansOfType(CrudRepository.class).values();
-            cleanUp(repos);
-        }
-
-        private void cleanUp(final Collection<CrudRepository> repos) {
-            repos.forEach(CrudRepository::deleteAll);
-        }
-    }
 }
